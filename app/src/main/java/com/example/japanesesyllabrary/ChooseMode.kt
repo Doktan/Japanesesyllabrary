@@ -22,6 +22,7 @@ class ChooseMode : AppCompatActivity() {
     lateinit var SpinnerView: Spinner
     lateinit var discrList: Array<String>
     lateinit var modesList: Array<String>
+    lateinit var chosenMode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class ChooseMode : AppCompatActivity() {
                     if(response.isSuccessful){
                         modesList = response.body()?.modes!!
                         discrList = response.body()?.discriptions!!
+                        chosenMode = modesList!![0]
                         val adapter: ArrayAdapter<String> = ArrayAdapter(applicationContext,android.R.layout.simple_spinner_dropdown_item, modesList)
                         SpinnerView.adapter = adapter
                         DiscriptionView.text = discrList!![0]
@@ -49,6 +51,7 @@ class ChooseMode : AppCompatActivity() {
                                 id: Long
                             ) {
                                 DiscriptionView.text = discrList!![id.toInt()]
+                                chosenMode = modesList!![id.toInt()]
                             }
 
                             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -70,7 +73,10 @@ class ChooseMode : AppCompatActivity() {
     }
 
     fun onPlay(view:View){
-        val intent = Intent(this, InGameActivity::class.java)
+        val intent = Intent(this, InGameActivity::class.java).apply{
+            putExtra("chosenMode",chosenMode)
+        }
+        Log.i("send", "send $chosenMode")
         startActivity(intent)
     }
 }

@@ -46,6 +46,8 @@ app.use('/api/user', require('./routes/user'))
 
 app.use('/api/mods', require('./routes/mode'))
 
+app.use('/api/game', require('./routes/game'))
+
 /*//роут теста
 app.use('/api/test', require('./routes/test'));
 

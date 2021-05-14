@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
                         override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                             Log.i("failure ochka", "message  ${t.message}")
+                            TextOnScreen.text = "Server isn't working\nTry again later!"
                         }
 
                     })
