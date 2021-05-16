@@ -4,6 +4,7 @@ const mysql = require("mysql2");
 const dbConfig = require('./db.config');
 const bodyParser = require('body-parser');
 const _port = 8080
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -16,7 +17,10 @@ app.use(bodyParser.json())
     password: dbConfig.PASSWORD,
     database: dbConfig.DB
   });
-  
+
+app.use(express.static('./res/workHiragana'))
+app.use(express.static('./res/workKatakana'))
+
 async function start() {
   try {
     connection.connect((err) => {
@@ -40,6 +44,10 @@ start();
 
 app.get('/', (req,res)=>{
   return res.status(200).json({message: "Добро пожаловать"});
+})
+
+app.get('/test',(req,res)=>{
+  res.status(200).sendFile('F:/everything/AnrdoidApps/Japanesesyllabrary/server/res/workHiragana/h_a.png')
 })
 
 app.use('/api/user', require('./routes/user'))

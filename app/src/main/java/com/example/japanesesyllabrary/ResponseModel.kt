@@ -10,3 +10,9 @@ data class ModesResponse(
     var modes: Array<String>? = null,
     var discriptions: Array<String>? = null
     )
+
+data class GameResponse(
+    var message: String? = null,
+    var prefix: String? = null,
+    var syll: Array<String>? = null
+)

@@ -1,8 +1,10 @@
 package com.example.japanesesyllabrary
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -23,6 +25,7 @@ class MainMenu : AppCompatActivity() {
         var useraname: String = file.readText()?.split(" ")[0]
         GreetingView = findViewById(R.id.test2)
         GreetingView.text = "Welcome, $useraname!"
+        Log.i("create", "activity mainmenu was created")
 
     }
 
@@ -35,6 +38,23 @@ class MainMenu : AppCompatActivity() {
     fun onPlay(view: View){
         val intent = Intent(this, ChooseMode::class.java)
         startActivity(intent)
+    }
+
+    override fun onBackPressed() {
+        AlertDialog.Builder(this)
+            .setTitle("Attention!")
+            .setMessage("Would you like to log out?")
+            .setPositiveButton("Yes") { dialog, which ->
+                dialog.cancel()
+                file.writeText("")
+                val intent = Intent(this, MainActivity::class.java);
+                startActivity(intent);
+            }
+            .setNegativeButton("No"){dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
+        //super.onBackPressed()
     }
 
 }
