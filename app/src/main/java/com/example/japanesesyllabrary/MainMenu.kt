@@ -33,10 +33,16 @@ class MainMenu : AppCompatActivity() {
         file.writeText("")
         val intent = Intent(this, MainActivity::class.java);
         startActivity(intent);
+        finish()
     }
 
     fun onPlay(view: View){
         val intent = Intent(this, ChooseMode::class.java)
+        startActivity(intent)
+    }
+
+    fun onRecords(view: View){
+        val intent = Intent(this, RecordsTable::class.java)
         startActivity(intent)
     }
 
@@ -49,6 +55,7 @@ class MainMenu : AppCompatActivity() {
                 file.writeText("")
                 val intent = Intent(this, MainActivity::class.java);
                 startActivity(intent);
+                finish()
             }
             .setNegativeButton("No"){dialog, which ->
                 dialog.dismiss()

@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                                     goToMainMenu()
                                     //тут теперь надо убрать окно логина
                                 }else{
-                                    TextOnScreen.text = ""
+                                    TextOnScreen.text = "test"
                                 }
                             }
                         }
@@ -186,6 +186,7 @@ class MainActivity : AppCompatActivity() {
     fun goToMainMenu() {
         val intent = Intent(this, MainMenu::class.java);
         startActivity(intent);
+        finish()
     }
 }
 

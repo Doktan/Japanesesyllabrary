@@ -13,6 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.http.*
+import java.io.File
 import kotlin.random.Random
 
 
@@ -33,10 +34,13 @@ class InGameActivity : AppCompatActivity() {
     lateinit var RightAnsw: String
     var iteration = 0
     lateinit var ImageView: ImageView
+    lateinit var dir: File
+    lateinit var progressView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val context = this
+        dir = this.filesDir
         setContentView(R.layout.activity_in_game)
         ImageView = findViewById(R.id.imageView)
         mode = intent.getStringExtra("chosenMode").toString()
@@ -45,6 +49,7 @@ class InGameActivity : AppCompatActivity() {
         comboView = findViewById(R.id.comboCount)
         scoreView.text = "Score: ${score.toString()}"
         comboView.text = "Combo: ${combo.toString()}"
+        progressView = findViewById(R.id.progessView)
 
         firstB = findViewById(R.id.firstChoise)
         secondB = findViewById(R.id.SecondChoise)
@@ -66,6 +71,7 @@ class InGameActivity : AppCompatActivity() {
                     if(response.isSuccessful && mode != "test"){
                         syll = response.body()?.syll!!
                         Log.i("syll","syll size ${syll.size}")
+                        progressView.text = "${iteration+1} from ${syll.size}"
                         prefix = response.body()?.prefix!!
                         GenerateQuestion()
 
@@ -168,19 +174,64 @@ class InGameActivity : AppCompatActivity() {
             }else
                 combo = 0
             comboView.text = "Combo: $combo"
+            progressView.text = "${iteration+1} from ${syll.size}"
             GenerateQuestion()
         }
         else{
-            AlertDialog.Builder(this)
-                .setTitle("Attention!")
-                .setMessage("END!")
-                .setPositiveButton("yes") { dialog, which ->
-                    dialog.cancel()
-                    val intent = Intent(this, ChooseMode::class.java)
-                    startActivity(intent);
-                }
-                .show()
+            var api =  RetrofitClient.getClient(getString(R.string.base_url)).create(GameApi::class.java)
+            val context = this
+            with(api){
+                var fileName = "data.txt"
+                var file = File(dir, fileName)
+                val name: String = file.readText().split(" ")[0]
+                Log.i("send data", "sendind $name $mode $score")
+                api.createRecord(name, mode, score).enqueue(object: Callback<ResponseModel>{
+                    override fun onResponse(
+                        call: Call<ResponseModel>,
+                        response: Response<ResponseModel>
+                    ) {
+                        if(response.isSuccessful){
+                            AlertDialog.Builder(context)
+                                .setTitle("Congratulations!")
+                                .setMessage("Your score has been saved")
+                                .setPositiveButton("ok") { dialog, which ->
+                                    dialog.cancel()
+                                    val intent = Intent(context, ChooseMode::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                .show()
+                        }else{
+                            Log.i("POST", "score request fail ${response.body()?.message}")
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        Log.i("POST", "score request failure ${t.message}")
+                    }
+
+                })
+            }
         }
+    }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        AlertDialog.Builder(this)
+            .setTitle("Warning")
+            .setMessage("Are you sure you want to exit?")
+            .setPositiveButton("yes") { dialog, which ->
+                dialog.cancel()
+                val intent = Intent(this, ChooseMode::class.java)
+                startActivity(intent)
+                finish()
+            }
+            .setNegativeButton("No"){dialog, which ->
+                dialog.dismiss()
+                super.onBackPressed()
+            }
+            .show()
     }
 
 }
@@ -190,4 +241,8 @@ interface GameApi{
     @FormUrlEncoded
     fun getGame(@Field("mode") mode: String?) : Call<GameResponse>
     //fun check(@Field("name") name: String?, @Field("password") password: String?) : Call<ResponseModel>
+
+    @POST("/api/game/record")
+    @FormUrlEncoded
+    fun createRecord(@Field("name") name: String?, @Field("mode") mode: String?, @Field("record") record: Int?): Call<ResponseModel>
 }

@@ -16,3 +16,9 @@ data class GameResponse(
     var prefix: String? = null,
     var syll: Array<String>? = null
 )
+
+data class RecordsResponse(
+    var message: String? = null,
+    var names: Array<String>? = null,
+    var records: Array<String>? = null
+)

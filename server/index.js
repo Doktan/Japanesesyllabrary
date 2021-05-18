@@ -56,20 +56,4 @@ app.use('/api/mods', require('./routes/mode'))
 
 app.use('/api/game', require('./routes/game'))
 
-/*//роут теста
-app.use('/api/test', require('./routes/test'));
-
-//роут сотрудников
-app.use('/api/worker', require('./routes/work'));
-
-//роут отделов
-app.use('/api/dep', require('./routes/dep'));
-
-//роут должностей
-app.use('/api/job', require('./routes/job'));
-
-//роут заказов
-app.use('/api/order', require('./routes/order'));
-
-//роут курьеров
-app.use('/api/cour', require('./routes/courier'));*/
+app.use('/api/records', require('./routes/records'))
