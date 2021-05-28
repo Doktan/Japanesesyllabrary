@@ -5,5 +5,5 @@
     <string name="username_hint">Username</string>
     <string name="sign_up_button_text">Sign Up</string>
     <string name="sign_in_button_text">Sign In</string>
-    <string name="base_url">"http://192.168.0.68:8080/"</string>
+    <string name="base_url">"http://192.168.0.68:8000/"</string>
 </resources>

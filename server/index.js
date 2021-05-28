@@ -3,7 +3,8 @@ const app = express();
 const mysql = require("mysql2");
 const dbConfig = require('./db.config');
 const bodyParser = require('body-parser');
-const _port = 8080
+const _port = 8000
+const http = require("http")
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -34,6 +35,16 @@ async function start() {
     app.listen(_port, () => {
       console.log('App has been started on port ', _port);
     });
+
+    /*http.createServer(function (req, res) {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('Hello World\n');
+    }).listen(_port);
+    console.log('Server running at ', _port);*/
+
+   /* http.createServer((req,res)=>{
+      
+    }).listen(_port, "192.168.0.68")*/
   } catch (error) {
     console.log('Server error: ', error);
     process.exit(1);
@@ -44,10 +55,6 @@ start();
 
 app.get('/', (req,res)=>{
   return res.status(200).json({message: "Добро пожаловать"});
-})
-
-app.get('/test',(req,res)=>{
-  res.status(200).sendFile('F:/everything/AnrdoidApps/Japanesesyllabrary/server/res/workHiragana/h_a.png')
 })
 
 app.use('/api/user', require('./routes/user'))
